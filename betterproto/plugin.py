@@ -87,8 +87,8 @@ def get_ref_type(
         # to use a forward ref and we need to add the import.
         parts = type_name.split(".")
         parts[-1] = stringcase.pascalcase(parts[-1])
-        imports.add(f"from .{'.'.join(parts[:-2])} import {parts[-2]}")
-        type_name = f"{parts[-2]}.{parts[-1]}"
+        imports.add(f"from {'.'.join(parts[:-2])} import {parts[-2]} as {parts[-2]}{parts[-3]}")
+        type_name = f"{parts[-2]}{parts[-3]}.{parts[-1]}"
 
     return type_name
 

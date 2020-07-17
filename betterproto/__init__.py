@@ -679,7 +679,10 @@ class Message(ABC):
         else:
             # This is either a primitive scalar or another message type. Calling
             # it should result in its zero value.
-            return t
+            if issubclass(field.type, Message):
+                return lambda: None
+            else:
+                return t
 
     def _postprocess_single(
         self, wire_type: int, meta: FieldMetadata, field: dataclasses.Field, value: Any
