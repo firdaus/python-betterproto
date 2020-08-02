@@ -72,14 +72,14 @@ class {{ service.py_name }}Stub(betterproto.ServiceStub):
         {% if method.server_streaming %}
         async for response in self._unary_stream(
             "{{ method.route }}",
-            request,
+            {% if method.input_message and method.input_message.properties %}request,{% else %}None,{% endif %}
             {{ method.output }},
         ):
             yield response
         {% else %}
         return await self._unary_unary(
             "{{ method.route }}",
-            request,
+            {% if method.input_message and method.input_message.properties %}request,{% else %}None,{% endif %}
             {{ method.output }},
         )
         {% endif %}
