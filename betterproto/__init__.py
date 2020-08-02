@@ -679,7 +679,8 @@ class Message(ABC):
         else:
             # This is either a primitive scalar or another message type. Calling
             # it should result in its zero value.
-            if issubclass(field.type, Message):
+            # A 'str' instance here means that it is a forward reference of a message type
+            if isinstance(field.type, str) or issubclass(field.type, Message):
                 return lambda: None
             else:
                 return t
