@@ -63,7 +63,7 @@ class {{ service.py_name }}Stub(betterproto.ServiceStub):
 
     {% endif %}
     {% for method in service.methods %}
-    async def {{ method.py_name }}(self{% if method.input_message and method.input_message.properties %}, *, request: {{ method.input }}{% endif %}) -> {% if method.server_streaming %}AsyncGenerator[{{ method.output }}, None]{% else %}{{ method.output }}{% endif %}:
+    async def {{ method.py_name }}(self{% if method.input_message %}, *, request: {{ method.input }}{% endif %}) -> {% if method.server_streaming %}AsyncGenerator[{{ method.output }}, None]{% else %}{{ method.output }}{% endif %}:
         {% if method.comment %}
 {{ method.comment }}
 
@@ -72,14 +72,14 @@ class {{ service.py_name }}Stub(betterproto.ServiceStub):
         {% if method.server_streaming %}
         async for response in self._unary_stream(
             "{{ method.route }}",
-            {% if method.input_message and method.input_message.properties %}request,{% else %}None,{% endif %}
+            {% if method.input_message %}request,{% else %}betterproto.EmptyMessage(),{% endif %}
             {{ method.output }},
         ):
             yield response
         {% else %}
         return await self._unary_unary(
             "{{ method.route }}",
-            {% if method.input_message and method.input_message.properties %}request,{% else %}None,{% endif %}
+            {% if method.input_message %}request,{% else %}betterproto.EmptyMessage(),{% endif %}
             {{ method.output }},
         )
         {% endif %}

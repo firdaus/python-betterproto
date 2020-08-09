@@ -26,6 +26,7 @@ from typing import (
     get_type_hints,
     TYPE_CHECKING,
 )
+from dataclasses import dataclass
 
 
 import grpclib.const
@@ -1150,3 +1151,8 @@ class ServiceStub(ABC):
             await stream.send_message(request, end=True)
             async for message in stream:
                 yield message
+
+
+@dataclass
+class EmptyMessage(Message):
+    pass
