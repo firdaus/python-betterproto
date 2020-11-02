@@ -816,6 +816,8 @@ class Message(ABC):
                     v = [i.to_dict(casing, include_default_values) for i in v]
                     if v or include_default_values:
                         output[cased_name] = v
+                elif v is None:
+                    output[cased_name] = v
                 else:
                     if v._serialized_on_wire or include_default_values:
                         output[cased_name] = v.to_dict(casing, include_default_values)
@@ -880,6 +882,8 @@ class Message(ABC):
                         elif meta.wraps:
                             setattr(self, field.name, value[key])
                         else:
+                            v = self._type_hint(field.name)()
+                            setattr(self, field.name, v)
                             v.from_dict(value[key])
                     elif meta.map_types and meta.map_types[1] == TYPE_MESSAGE:
                         v = getattr(self, field.name)
